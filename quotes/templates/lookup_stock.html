@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Stocks Portfolio | Lookup Stock Info{% endblock %}
+
+{% block content %}
+
+    <h1>Lookup Stock Info</h1>
+    <br>
+    <form action="{% url 'lookup_stock' %}" class="form-inline my-2 my-lg-0" method="POST">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Enter Stock Symbol" aria-label="Search" name="ticker">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Get Stock Quote</button>
+    </form>
+    <br>
+    <br>
+    {% if ticker %}
+        {{ ticker }}
+    {% endif %}
+
+    {% if api %}
+        {% if api == "error" %}
+            There was a problem with the ticker symbol you entered...please try again.
+        {% else %}
+            <h3>{{ api.companyName }}</h3>
+            <ul>
+                <li>Price: ${{ api.latestPrice }}</li>
+                <li>Previous Close: ${{ api.previousClose }}</li>
+                <li>Market Cap: {{ api.marketCap }}</li>
+                <li>YTD Change: {{ api.ytdChange }}</li>
+                <li>52-Week High: {{ api.week52High }}</li>
+                <li>52-Week Low: {{ api.week52Low }}</li>                   
+            </ul>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}
